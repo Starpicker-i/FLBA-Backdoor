@@ -51,18 +51,24 @@ class Poison_Test(object):
         total_accuracy = 0.0
         total_h = np.zeros(self.config["test_epoch"])
         total_accuracy_vector = []
+        total_asr_vector = []
 
         for epoch_idx in range(self.config["test_epoch"]):
             self.logger.info("============ Testing on the test set ============")
-            _, accuracies = self._validate(epoch_idx)
+            _, accuracies, asrs= self._validate(epoch_idx)
             test_accuracy, h = mean_confidence_interval(accuracies)
+            test_asr, _ = mean_confidence_interval(asrs)
+            self.logger.info("Test ASR: {:.3f}".format(test_asr))
             self.logger.info("Test Accuracy: {:.3f}\t h: {:.3f}".format(test_accuracy, h))
             total_accuracy += test_accuracy
             total_accuracy_vector.extend(accuracies)
+            total_asr_vector.extend(asrs)
             total_h[epoch_idx] = h
 
         aver_accuracy, h = mean_confidence_interval(total_accuracy_vector)
+        aver_asr, _ = mean_confidence_interval(total_asr_vector)
         self.logger.info("Aver Accuracy: {:.3f}\t Aver h: {:.3f}".format(aver_accuracy, h))
+        self.logger.info("Aver ASR: {:.3f}".format(aver_asr))
         self.logger.info("............Testing is end............")
 
     def _validate(self, epoch_idx):
@@ -98,7 +104,7 @@ class Poison_Test(object):
                 meter.update("data_time", time() - end)
 
                 # calculate the output
-                output, acc ,asr = self.model.set_forward_loss(batch)  # 原始的testc
+                output, acc ,asr = self.model.set_forward_ours(batch)  # 原始的testc
 
 
                 accuracies.append(acc)
