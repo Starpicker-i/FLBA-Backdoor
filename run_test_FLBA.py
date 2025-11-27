@@ -12,7 +12,7 @@ PATH = "./results/BaselinePlus-miniImageNet--ravi-resnet12-5-5-Dec-28-2022-13-18
 VAR_DICT = {
     "test_epoch": 5,
     "device_ids": "0,1",
-    "n_gpu":2 ,
+    "n_gpu": 1,
     "test_episode": 600,
     "episode_size": 1,
     "test_way": 5,
